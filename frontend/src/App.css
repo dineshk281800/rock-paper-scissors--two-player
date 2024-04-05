@@ -1,0 +1,96 @@
+html,
+body {
+    font-family: "Amazon Ember";
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+}
+
+
+.App {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: white;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    color: grey;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Login & Register */
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5rem;
+
+    font-weight: 700;
+}
+
+.wrapper form {
+    padding: 2.5rem 3rem;
+}
+
+.wrapper form .btn,
+.fetch-btn {
+    background-color: #fa9c23;
+    border-color: #fa9c23;
+    color: white;
+    margin-top: 1rem;
+}
+
+.fetch-btn:hover {
+    background-color: #fa9c23;
+    color: white;
+}
+
+.wrapper form a {
+    font-size: 0.9rem;
+    color: grey;
+}
+
+
+/* Loader */
+.loader {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20%;
+    width: 80px;
+    height: 80px;
+    padding-left: 0;
+}
+
+.loader:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid #fa9c23;
+    border-color: #fa9c23 transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
