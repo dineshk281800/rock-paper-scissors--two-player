@@ -16,6 +16,7 @@ const Login = () => {
   // const [email, setEmail] = useState('')
   // const [password, setPassword] = useState("")
 
+  console.log(user)
   const { loading, login } = useLogin()
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +37,7 @@ const Login = () => {
           >
             <h2 className="mb-4">Login</h2>
             <div className="mb-3">
-              <label for="email_field" className="form-label">Email</label>
+              <label htmlFor="email_field" className="form-label">Email</label>
               <input
                 type="email"
                 id="email_field"
@@ -49,7 +50,7 @@ const Login = () => {
             </div>
 
             <div className="mb-3">
-              <label for="password_field" className="form-label">Password</label>
+              <label htmlFor="password_field" className="form-label">Password</label>
               <input
                 type="password"
                 id="password_field"

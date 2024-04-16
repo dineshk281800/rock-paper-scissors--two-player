@@ -1,0 +1,144 @@
+html {
+    font-size: 16px;
+}
+
+body {
+    height: 100vh;
+}
+
+.containers {
+    width: 85%;
+    max-width: 40rem;
+    background-color: var(--white-color);
+    padding: 4rem 3rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    box-shadow: 1rem 1rem 2rem rgba(0, 0, 0, 0.35);
+}
+
+.gameRoom {
+    /* display: flex; */
+    display: block;
+}
+
+.intial {
+    display: block;
+}
+
+.notRoom {
+    display: none;
+}
+
+/* .rock {
+    color: transparent;
+    background: url('./assets/rock.svg');
+    background-position: center;
+    width: 200px;
+    height: 200px;
+    background-size: 200px;
+}
+
+.paper {
+    color: transparent;
+    background: url('./assets/paper.svg');
+    background-position: center;
+    width: 200px;
+    height: 200px;
+    background-size: 200px;
+}
+
+.scissors {
+    color: transparent;
+    background: url('./assets/scissor.svg');
+    background-position: center;
+    width: 200px;
+    height: 200px;
+    background-size: 200px;
+} */
+#player1Choice,
+#player2Choice {
+    text-align: center;
+    height: 6rem;
+    width: 6rem;
+    margin: 1rem 0;
+}
+
+.header {
+    min-height: 2rem;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5rem;
+}
+
+.header .title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    list-style: 1.5;
+    text-transform: uppercase;
+}
+
+.opponent {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.scores p {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.scores p span {
+    font-weight: 700;
+}
+
+.weapons {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.weapons button {
+    background-color: var(--purple-color);
+    color: var(--white-color);
+    border: none;
+    outline: none;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 3rem;
+}
+
+.details {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.scores,
+.details {
+    font-size: 1.1rem;
+}
+
+.result {
+    width: 12rem;
+    padding: 0.8rem 0;
+    margin: 2rem auto;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.user-choice,
+.computer-choice {
+    font-weight: 400;
+    margin-bottom: 0.8rem;
+}
+
+span {
+    font-weight: 900;
+    text-transform: uppercase;
+}

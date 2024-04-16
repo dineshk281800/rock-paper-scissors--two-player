@@ -1,0 +1,278 @@
+import React, { useEffect, useState } from 'react'
+import './playerLayout.css'
+import { io } from 'socket.io-client'
+// import MetaData from './MetaData';
+const socket = io('localhost:8000')
+
+function CopyCodeButton({ roomId }) {
+    const handleClick = () => {
+        navigator.clipboard.writeText(roomId)
+            .then(() => {
+                console.log('Async: Copying to clipboard was successful!');
+            })
+            .catch((err) => {
+                console.error('Async: Could not copy text: ', err);
+            });
+    };
+
+    return (
+        <button
+            className="btn btn-primary py-2 my-2"
+            onClick={handleClick}
+        >
+            Copy Code
+        </button>
+    );
+}
+
+function OpponentChoiceButton({ data }) {
+    return (
+        <button
+            id="opponentButton"
+            className={data.playerValue.toString().toLowerCase()}
+            style={{ display: 'none' }}
+        >
+            {data.playerValue}
+        </button>
+    );
+}
+
+function PlayerChoiceButton({ playerValue }) {
+    return (
+        <button className={playerValue.toString().toLowerCase()} style={{ display: 'block' }}>
+            {playerValue}
+        </button>
+    );
+}
+
+function GameResult({ data, player1 }) {
+    const [winnerText, setWinnerText] = useState(''); // State variable for winner text
+
+    useEffect(() => {
+        if (data.winner !== 'tie') {
+            if (data.winner === 'player1' && player1) {
+                setWinnerText('You win!'); // Update winner text using state
+            } else if (data.winner === 'player1') {
+                setWinnerText('You lose.'); // Update winner text using state
+            } else if (data.winner === 'player2' && !player1) {
+                setWinnerText('You win!'); // Update winner text using state
+            } else if (data.winner === 'player2') {
+                setWinnerText('You lose.'); // Update winner text using state
+            }
+        } else {
+            setWinnerText('It\'s a draw!'); // Update winner text using state
+        }
+
+        // Handle displaying opponent's choice and winner area:
+        document.getElementById('opponentState').style.display = 'none'; // Not ideal for React
+        document.getElementById('opponentButton').style.display = 'block'; // Not ideal for React
+
+        // Consider using React state or refs for these elements instead
+    }, [data, player1]); // Update on data and player1 changes
+
+    return (
+        <div id="winnerArea">
+            {winnerText && <p>{winnerText}</p>} {/* Conditionally render winner text */}
+        </div>
+    );
+}
+
+const PlayerLayout = () => {
+    // let roomId = null;
+
+    const [roomId, setRoomId] = useState(null);
+    const [isWaiting, setIsWaiting] = useState(false);
+    const [viewGame, setViewGame] = useState(false);
+    const [containerbox, setContainerbox] = useState(false)
+
+    const [opponentChoice, setOpponentChoice] = useState(null);
+
+    const [playerChoice, setPlayerChoice] = useState(null);
+
+    const [gameData, setGameData] = useState(null);
+
+    // let player1 = false;
+    const [player1, setPlayer1] = useState(false);
+
+    console.log("roomId", roomId)
+    console.log("isWaiting", isWaiting)
+    console.log("viewGame", viewGame)
+    console.log("container", containerbox)
+    console.log("opponentChoice", opponentChoice)
+    console.log("playerChoice", playerChoice)
+    console.log("gameData", gameData)
+    console.log("player1", player1)
+    const createOpponentChoiceButton = (data) => {
+        setOpponentChoice(data); // Update state with opponent's choice
+    };
+
+    function sendChoice(playerValue) {
+        const choiceEvent = player1 ? "player1Choice" : "player2Choice";
+        socket.emit(choiceEvent, {
+            playerValue, // Use destructuring for brevity
+            roomId
+        });
+    }
+    const handleChoiceClick = (playerValue) => {
+        setPlayerChoice(playerValue); // Update state on button click
+        sendChoice(playerValue); // Call sendChoice function with choice
+    };
+
+    // create game
+    const createGame = () => {
+        // player1 = true;
+        setPlayer1(true);
+        socket.emit('createGame');
+    }
+
+    const joinGame = () => {
+        setViewGame(true)
+        socket.emit('joinGame', { roomId: roomId });
+    }
+
+    // const handleRoomIdChange = (event) => {
+    //     setRoomId(event.target.value);
+    // };
+    // const handleSubmit = (event) => {
+    //     event.preventDefault();
+
+    //     // Emit joinGame event with roomUniqueId
+    //     socket.emit('joinGame', { roomId });
+    // };
+
+    // useEffect(() => {
+    socket.on('newGame', ({ roomId }) => {
+        setRoomId(roomId);
+        setViewGame(true)
+        setIsWaiting(true)
+    })
+
+    socket.on("playersConnected", () => {
+        setViewGame(false);
+        setIsWaiting(false);
+        setContainerbox(true)
+    })
+
+    socket.on("player1Choice", (data) => {
+        if (!player1) {
+            createOpponentChoiceButton(data);
+        }
+    });
+
+    socket.on("player2Choice", (data) => {
+        if (player1) {
+            createOpponentChoiceButton(data);
+        }
+    });
+
+    socket.on("result", (data) => {
+        // let winnerText = '';
+        // const [winnerText, setWinnerText] = useState('');
+        // if (data.winner !== 'tie') {
+        //     if (data.winner === 'player1' && player1) {
+        //         winnerText = 'You win';
+        //     } else if (data.winner === 'player1') {
+        //         winnerText = 'You lose';
+        //     } else if (data.winner === 'player2' && !player1) {
+        //         winnerText = 'You win';
+        //     } else if (data.winner === 'player2') {
+        //         winnerText = 'You lose';
+        //     }
+        // } else {
+        //     winnerText = `It's a draw`;
+        // }
+        // document.getElementById('opponentState').style.display = 'none';
+        // document.getElementById('opponentButton').style.display = 'block';
+        // document.getElementById('winnerArea').innerHTML = winnerText;
+        setGameData(data)
+    });
+    // }, [])
+
+
+    return (
+        <>
+            {/* <MetaData title={"RPS"} /> */}
+            {viewGame ? (
+                <div className="containers"
+                // style={{ display: roomId ? 'block' : 'none' }} 
+                >
+                    <header className="header">
+                        <div className="title">
+                            <p>Rock Paper scissors</p>
+                            {/* <p className='opponent'>Opponent: <span className='opponent'>Waiting for Opponent</span> </p> */}
+                        </div>
+                        {/* <div className="scores">
+                            <p>Opponent: <span id="computer-score">0</span>/6</p>
+                            <p>You: <span id="user-score">0</span>/6</p>
+                        </div> */}
+                    </header>
+
+                    <div id="waitingRoom" className="h4">
+                        {isWaiting && (
+                            <>
+                                <p>Waiting for opponent, please share code {roomId} to join</p>
+                                <CopyCodeButton roomId={roomId} />
+                            </>
+                        )}
+                    </div>
+
+                    <div className={`${containerbox ? "gameRoom" : "notRoom"}`}>
+                        <div className="col-md-6">
+                            You:
+                            <div className="weapons">
+                                <button onClick={() => handleChoiceClick('Rock')}><i className="fa-solid fa-hand-back-fist"></i></button>
+                                <button onClick={() => handleChoiceClick('Paper')}><i className="fa-solid fa-hand"></i></button>
+                                <button onClick={() => handleChoiceClick('Scissors')}><i className="fa-solid fa-hand-scissors"></i></button>
+                            </div>
+                        </div>
+                        <div className="col-md-6">
+                            Opponent:
+                            <div id="player2Choice">
+                                <div id="opponentState">
+                                    {opponentChoice ? (
+                                        <>
+                                            <p>Opponent made a choice</p>
+                                            <OpponentChoiceButton data={opponentChoice} />
+                                        </>
+                                    ) : (
+                                        <p>Waiting for opponent's choice...</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    {/* <div id="winnerAnnouncement" class="display-4"></div> */}
+                    {gameData && <GameResult data={gameData} player1={true} />}
+                    <div id="player1Choice">
+                        {playerChoice && <PlayerChoiceButton rpsValue={playerChoice} />} {/* Render button if chosen */}
+                    </div>
+
+                </div>
+            ) : (
+                <div className="containers"
+                // style={{ display: roomId ? 'none' : 'block' }}
+                >
+                    <header className="header">
+                        <div className="title">
+                            <p>Rock Paper scissors</p>
+                        </div>
+                    </header>
+                    <div id="initial" className="container col-md-6" >
+                        <button className="form-control btn btn-primary" onClick={createGame}>Create Game</button>
+                        <div className="text-center">or</div>
+                        {/* <form onSubmit={handleSubmit}></form> */}
+                        <input className="form-control my-2" placeholder="Enter Code" type="text" name="" value={roomId} onChange={(e) => setRoomId(e.target.value)} id="roomId" />
+                        <button
+                            className="form-control btn btn-secondary"
+                            onClick={joinGame}
+                            type="submit">Join Game
+                        </button>
+                    </div>
+                </div>
+            )}
+        </>
+    )
+}
+
+export default PlayerLayout

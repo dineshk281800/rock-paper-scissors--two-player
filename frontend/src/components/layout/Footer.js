@@ -2,9 +2,9 @@ import React from 'react'
 
 const footer = () => {
   return (
-    <footer class="py-1 pt-5">
-      <p class="text-center mt-1 fw-bold">
-        ShopIT - 2020-2023, All Rights Reserved
+    <footer className="py-1 pt-5">
+      <p className="text-center mt-1 fw-bold">
+        RockPaperScissors @Dinesh - 2024, All Rights Reserved
       </p>
     </footer>
   )

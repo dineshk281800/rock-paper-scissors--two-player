@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast';
 
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import PlayerLayout from "./components/layout/PlayerLayout";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path={"/"} element={<Login />} />
           <Route path={"/register"} element={<Register />} />
+          <Route path={"/playing"} element={<PlayerLayout />} />
         </Routes>
       </div>
       <Footer />
